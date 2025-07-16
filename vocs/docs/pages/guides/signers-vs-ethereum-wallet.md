@@ -37,9 +37,9 @@ let ledger_signer = LedgerSigner::new(HDPath::LedgerLive(0), Some(1)).await?;
 let aws_signer = AwsSigner::new(client, key_id, Some(1)).await?;
 let pk_signer: PrivateKeySigner = "0x...".parse()?;
 
-let mut wallet = EthereumWallet::from(pk_signer) // pk_signer will be registered as the default signer.
-    .register_signer(aws_signer)
-    .register_signer(ledger_signer);
+let mut wallet = EthereumWallet::from(pk_signer); // pk_signer will be registered as the default signer.
+wallet.register_signer(aws_signer);
+wallet.register_signer(ledger_signer);
 
 let provider = ProviderBuilder::new()
     .wallet(wallet)
@@ -52,8 +52,8 @@ If you wish to change the default signer after instantiating `EthereumWallet`, y
 
 ```rust
 // `pk_signer` will be registered as the default signer
-let mut wallet = EthereumWallet::from(pk_signer)
-    .register_signer(ledger_signer);
+let mut wallet = EthereumWallet::from(pk_signer);
+wallet.register_signer(ledger_signer);
 
 // Changes the default signer to `aws_signer`
 wallet.register_default_signer(aws_signer);
